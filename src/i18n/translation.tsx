@@ -1,4 +1,6 @@
-export const Messages = {
+import { Messages } from "./messages";
+
+export const translations: Record<keyof typeof Messages, Record<any, string>> = {
     TITLE_MAIN_SCREEN: { eng: "Solar Home Monitor" },
     TEXT_BATTERY: { eng: "Battery" },
     TEXT_SOLAR: { eng: "Solar" },
@@ -13,4 +15,7 @@ export const Messages = {
     TEXT_CHARGE_CURRENT: { eng: "Charge Current" },
     TEXT_CAPACITY: { eng: "Capacity" },
     TEXT_BATTERY_CHARGE: { eng: "Battery Charge" },
+    TEXT_OUTPUT_CURRENT: {eng: "Output Current"},
+    TEXT_OUTPUT_POWER: {eng: "Output Power"},
+    TEXT_FREQUENCY: {eng: "Frequency"}
 }
