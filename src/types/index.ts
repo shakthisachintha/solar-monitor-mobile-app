@@ -1,6 +1,6 @@
 export enum Units {
     POWER = 1,
-    CURRRENT = 2,
+    CURRENT = 2,
     VOLTAGE = 3,
     PERCENTAGE = 4,
     TEMPERATURE = 5,
@@ -19,7 +19,3 @@ export enum ChargerPriority {
     SNU = 2,
     OSO = 3,
 }
-
-
-
-
