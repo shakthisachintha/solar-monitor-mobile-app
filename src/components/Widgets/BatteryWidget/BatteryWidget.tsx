@@ -4,14 +4,15 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { LocaleContext } from '../../../i18n/LocaleContext'
 import { AppText } from '../../'
 import TextGrid from '../../TextGrid/TextGrid'
+import { StyleParams, ThemeColors } from '../../../styles/global.style'
 
 const BatteryWidget = () => {
     const messageService = useContext(LocaleContext);
 
     return (<View style={styles.widgetContainer}>
         <View style={{ flex: 10 }}>
-            <AppText style={{ fontSize: 30 }}>{messageService("TEXT_BATTERY")}</AppText>
-            <View style={{ borderBottomWidth: 1, marginTop: 5, marginBottom: 10 }} />
+            <AppText style={styles.widgetTitleText}>{messageService("TEXT_BATTERY")}</AppText>
+            <View style={styles.titleUnderline} />
             <TextGrid>
                 {[
                     { key: 'TEXT_OUTPUT_CURRENT', value: "10A" },
@@ -28,16 +29,26 @@ const BatteryWidget = () => {
 
 export default BatteryWidget
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
     widgetContainer: {
         justifyContent: 'space-between',
-        padding: 10,
+        padding: StyleParams.spacer.Medium,
         paddingRight: 0,
-        marginHorizontal: 10,
-        marginVertical: 10,
-        borderWidth: 2,
-        borderRadius: 10,
+        marginHorizontal: StyleParams.spacer.Small,
+        marginVertical: StyleParams.spacer.Small,
+        backgroundColor: ThemeColors.WHITE,
+        elevation: 6,
+        borderRadius: StyleParams.borderRadius.Large,
         flexDirection: "row",
         alignItems: 'center'
+    },
+    widgetTitleText: {
+        fontSize: StyleParams.fontSizes.H3
+    },
+    titleUnderline: {
+        borderBottomColor: ThemeColors.GRAY,
+        borderBottomWidth: StyleParams.borderWidth.Small,
+        marginTop: .5 * StyleParams.spacer.Small,
+        marginBottom: StyleParams.spacer.Small
     }
 })

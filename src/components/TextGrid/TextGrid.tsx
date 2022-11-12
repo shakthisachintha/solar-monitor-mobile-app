@@ -2,10 +2,11 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import AppText from '../AppText/AppText'
 import { Messages } from '../../i18n/messages'
+import { Units } from '../../types'
 
 interface ITextGridProps {
     separator?: string,
-    children: { key: keyof typeof Messages, value: string }[]
+    children: { key: keyof typeof Messages, value: string, unit?: Units }[]
 }
 
 const renderKeys = (values: { key: keyof typeof Messages, value: string }[]): JSX.Element[] => {
@@ -20,9 +21,9 @@ const renderSeparator = (values: { key: keyof typeof Messages, value: string }[]
     })
 }
 
-const renderValues = (values:{ key: keyof typeof Messages, value: string }[]): JSX.Element[] => {
-    return values.map(({ key, value }) => {
-        return (<AppText key={`${value.toString()}`}>{value}</AppText>)
+const renderValues = (values:{ key: keyof typeof Messages, value: string, unit?: Units }[]): JSX.Element[] => {
+    return values.map(({ key, value, unit }) => {
+        return (<AppText  key={`${value.toString()}`} unit={unit}>{value}</AppText>)
     })
 }
 
