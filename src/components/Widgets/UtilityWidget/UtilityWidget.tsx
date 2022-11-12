@@ -1,11 +1,13 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { StyleSheet, View } from 'react-native'
 import LottieView from "lottie-react-native";
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
-import {AppText} from '../../'
+import { AppText, TextGrid } from '../../'
 import { Animations } from '../../../assets';
+import { styles as WidgetsStyles } from '../SolarWidget/SolarWidget';
+import { styles as WidgetStyles2 } from '../BatteryWidget/BatteryWidget';
+import { StyleParams } from '../../../styles/global.style';
+import { Units } from '../../../types';
 
 const Capacity = (fillValue: number): JSX.Element => {
     const cap = (2400 * fillValue / 100) / 1000
@@ -21,18 +23,23 @@ const UtilityWidget = () => {
         <View style={styles.widgetColumn}>
             <View style={styles.widgetContainer}>
                 <View style={{ flex: 10 }}>
-                    <AppText style={{ fontSize: 30, textAlign: 'right' }}>UTILITY POWER</AppText>
-                    <View style={{ borderBottomWidth: 1, marginTop: 5, marginBottom: 10 }} />
-                    <AppText>Capacity : 2.4Kw</AppText>
-                    <AppText>Voltage  : 240.6V</AppText>
-                    <AppText>Current  : 10A</AppText>
+                    <AppText style={{ ...WidgetStyles2.widgetTitleText, textAlign: 'right' }}>Utility Power</AppText>
+                    <View style={WidgetStyles2.titleUnderline} />
+                    <TextGrid>
+                        {[
+                            { key: 'TEXT_VOLTAGE', value: "240.5", unit: Units.VOLTAGE },
+                            { key: 'TEXT_CURRENT', value: "2.5", unit: Units.CURRENT },
+                            { key: 'TEXT_CHARGE_POWER', value: "10", unit: Units.POWER }
+                        ]}
+                    </TextGrid>
+                    <AppText>Possible power cut</AppText>
                 </View>
                 <View style={{
-                    flex: 6, paddingLeft: 10,
+                    flex: 6,
+                    paddingLeft: 0.5 * StyleParams.spacer.Small,
                     alignItems: "center"
-                }}
-                >
-                    <LottieView style={{ width: 100 }} source={Animations.utilityAnimation} autoPlay loop />
+                }}>
+                    <LottieView style={{ width: 120 }} source={Animations.noPowerAnimation} autoPlay loop />
                 </View>
             </View>
         </View>
@@ -44,16 +51,9 @@ export default UtilityWidget
 
 const styles = StyleSheet.create({
     widgetColumn: {
-        marginHorizontal: 10,
-        marginVertical: 10,
-        borderWidth: 0.9,
-        borderRadius: 10,
+        ...WidgetsStyles.widgetColumn
     },
     widgetContainer: {
-        padding: 10,
-        paddingRight: 0,
-        justifyContent: 'space-between',
-        flexDirection: "row-reverse",
-        alignItems: 'center'
+        ...WidgetsStyles.widgetContainer
     }
 })

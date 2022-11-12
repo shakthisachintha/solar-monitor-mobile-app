@@ -1,9 +1,14 @@
 import { AnyAction } from "redux";
+import { AuthState } from "../../types/store.types";
 import { AuthActions } from "../actionTypes";
 
-const initialAuthState = { isLogged: true, user: {name:"Shakthi Sachintha", email:"shakthisachintha@gmail.com", id:1} }
+const initialAuthState: AuthState =
+{
+    isLogged: false,
+    user: null
+}
 
-const authReducer = (state = initialAuthState, action: AnyAction) => {
+const authReducer = (state: AuthState = initialAuthState, action: AnyAction) => {
     switch (action.type) {
         case AuthActions.LOGGED_IN:
             return {
