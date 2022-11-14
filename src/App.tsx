@@ -9,55 +9,47 @@ import { BatteryWidget, InverterWidget, SolarWidget, UtilityWidget } from './com
 import { LocaleContext } from './i18n/LocaleContext';
 import LocaleService from './i18n/LocaleService';
 import { store } from './redux/';
+import { ThemeColors } from './styles/global.style';
 
 const language = 'eng';
 const messageService = LocaleService(language);
 
 const App = () => {
-  useEffect(() => {
-    const es = new EventSource("https://3c71-175-157-164-182.in.ngrok.io/stream");
+  // useEffect(() => {
+  //   const es = new EventSource("https://3c71-175-157-164-182.in.ngrok.io/stream");
 
-    es.addEventListener("open", (event) => {
-      console.log("Open SSE connection.");
-    });
+  //   es.addEventListener("open", (event) => {
+  //     console.log("Open SSE connection.");
+  //   });
 
-    es.addEventListener("message", (event) => {
-      console.log("New message event:", event.data);
-    });
+  //   es.addEventListener("message", (event) => {
+  //     console.log("New message event:", event.data);
+  //   });
 
-    es.addEventListener("error", (event) => {
-      if (event.type === "error") {
-        console.error("Connection error:", event.message);
-      } else if (event.type === "exception") {
-        console.error("Error:", event.message, event.error);
-      }
-    });
+  //   es.addEventListener("error", (event) => {
+  //     if (event.type === "error") {
+  //       console.error("Connection error:", event.message);
+  //     } else if (event.type === "exception") {
+  //       console.error("Error:", event.message, event.error);
+  //     }
+  //   });
 
-    es.addEventListener("close", (event) => {
-      console.log("Close SSE connection.");
-    });
-  }, []);
+  //   es.addEventListener("close", (event) => {
+  //     console.log("Close SSE connection.");
+  //   });
+  // }, []);
 
   return (
     <Provider store={store}>
       <LocaleContext.Provider value={messageService}>
-        <SafeAreaView style={{
-          backgroundColor: "#fff",
-          flex: 1,
-        }}>
-
+        <SafeAreaView style={styles.container}>
           <AppHeader />
           <ScrollView>
             <BatteryWidget />
             <SolarWidget />
             <InverterWidget />
             <UtilityWidget />
-            <BatteryWidget />
-            <SolarWidget />
-            <InverterWidget />
-            <UtilityWidget />
           </ScrollView>
-
         </SafeAreaView>
       </LocaleContext.Provider>
     </Provider>
@@ -67,7 +59,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: ThemeColors.LIGHT,
   }
 })
 

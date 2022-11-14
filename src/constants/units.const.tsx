@@ -1,9 +1,10 @@
-export const units = {
-    VOLTS: "V",
-    AMPS: "A",
-    POWER: "W",
-    TEMP: "°C",
-    PERCENTAGE: "%",
-    KILO: "k",
-    ENERGY: "kWh"
+import { Units } from '../types/'
+
+export const UnitTexts = {
+    [Units.POWER]: "W",
+    [Units.CURRENT]: "A",
+    [Units.VOLTAGE]: "V",
+    [Units.PERCENTAGE]: "%",
+    [Units.TEMPERATURE]: "°C",
+    [Units.FREQUENCY]: "Hz"
 }
