@@ -6,5 +6,6 @@ export const UnitTexts = {
     [Units.VOLTAGE]: "V",
     [Units.PERCENTAGE]: "%",
     [Units.TEMPERATURE]: "°C",
-    [Units.FREQUENCY]: "Hz"
+    [Units.FREQUENCY]: "Hz",
+    [Units.KPOWER]: "kW"
 }

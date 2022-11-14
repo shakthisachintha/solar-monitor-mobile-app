@@ -6,24 +6,26 @@ import { Units } from '../../types'
 
 interface ITextGridProps {
     separator?: string,
-    children: { key: keyof typeof Messages, value: string, unit?: Units }[]
+    children: { key: keyof typeof Messages, value: string | number, unit?: Units }[]
 }
 
-const renderKeys = (values: { key: keyof typeof Messages, value: string }[]): JSX.Element[] => {
+const getKey = ()=> Math.random().toString(36).slice(2, 7);
+
+const renderKeys = (values: { key: keyof typeof Messages, value: string | number }[]): JSX.Element[] => {
     return values.map(({ key, value }) => {
-        return (<AppText key={`${key.toString()}`} value={key} />)
+        return (<AppText key={`${getKey().toString()}`} value={key} />)
     })
 }
 
-const renderSeparator = (values: { key: keyof typeof Messages, value: string }[], seperator: string): JSX.Element[] => {
+const renderSeparator = (values: { key: keyof typeof Messages, value: string | number }[], seperator: string): JSX.Element[] => {
     return values.map(({key, value}) => {
-        return (<AppText key={`${key.toString()}-separator`}> {seperator} </AppText>)
+        return (<AppText key={`${getKey().toString()}-separator`}> {seperator} </AppText>)
     })
 }
 
-const renderValues = (values:{ key: keyof typeof Messages, value: string, unit?: Units }[]): JSX.Element[] => {
+const renderValues = (values:{ key: keyof typeof Messages, value: string | number, unit?: Units }[]): JSX.Element[] => {
     return values.map(({ key, value, unit }) => {
-        return (<AppText  key={`${value.toString()}`} unit={unit}>{value}</AppText>)
+        return (<AppText  key={`${getKey().toString()}`} unit={unit}>{value}</AppText>)
     })
 }
 

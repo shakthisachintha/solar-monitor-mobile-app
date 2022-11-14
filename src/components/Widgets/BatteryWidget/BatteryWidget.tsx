@@ -1,12 +1,31 @@
 import React, { useContext } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { StyleSheet, View } from 'react-native'
 import { LocaleContext } from '../../../i18n/LocaleContext'
 import { AppText } from '../../'
 import TextGrid from '../../TextGrid/TextGrid'
-import { StyleParams, ThemeColors } from '../../../styles/global.style'
+import { FontFamilies, StyleParams, ThemeColors } from '../../../styles/global.style'
+import { IAppState } from '../../../types/store.types'
+import { connect } from 'react-redux'
+import { Units } from '../../../types'
+import { AnimatedCircularProgress } from 'react-native-circular-progress'
 
-const BatteryWidget = () => {
+interface IBatteryWidgetProps {
+    voltage?: number,
+    current?: number,
+    chargePower?: number,
+    soc?: number
+}
+
+const Capacity = (fillValue: number): JSX.Element => {
+    const cap = fillValue
+    return (
+      <View>
+        <AppText style={{fontSize: StyleParams.fontSizes.H5, ...FontFamilies.medium}} unit={Units.PERCENTAGE}>{cap.toString()}</AppText>
+      </View>
+    )
+  }
+
+const BatteryWidget: React.FC<IBatteryWidgetProps> = ({voltage=0, current=0, chargePower=0, soc=0}) => {
     const messageService = useContext(LocaleContext);
 
     return (<View style={styles.widgetContainer}>
@@ -15,19 +34,34 @@ const BatteryWidget = () => {
             <View style={styles.titleUnderline} />
             <TextGrid>
                 {[
-                    { key: 'TEXT_OUTPUT_CURRENT', value: "10A" },
-                    { key: 'TEXT_VOLTAGE', value: "24.5V" },
-                    { key: 'TEXT_CHARGE_CURRENT', value: "10.5A" }
+                    { key: 'TEXT_VOLTAGE', value: voltage, unit: Units.VOLTAGE },
+                    { key: 'TEXT_CURRENT', value: current, unit: Units.CURRENT },
+                    { key: 'TEXT_CHARGE_POWER', value: chargePower, unit: Units.POWER }
                 ]}
             </TextGrid>
         </View>
-        <View style={{ flex: 4 }}>
-            <Icon style={{ color: "green", fontSize: 120 }} name='battery-80' />
-        </View>
+        <View style={{ flex: 5, marginLeft: StyleParams.spacer.Small, alignItems: "center" }}>
+            <AnimatedCircularProgress
+              size={100}
+              backgroundWidth={StyleParams.spacer.Medium}
+              lineCap={'round'}
+              children={Capacity}
+              width={StyleParams.spacer.Medium}
+              fill={soc}
+              rotation={0}
+              tintColor={ThemeColors.GREEN}
+              backgroundColor={ThemeColors.GRAY} />
+          </View>
     </View>)
 }
 
-export default BatteryWidget
+const mapStateToProps = (state: IAppState) => {
+    return {
+        ...state.battery
+    }
+}
+
+export default connect(mapStateToProps, null)(BatteryWidget);
 
 export const styles = StyleSheet.create({
     widgetContainer: {

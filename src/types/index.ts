@@ -4,7 +4,8 @@ export enum Units {
     VOLTAGE = 3,
     PERCENTAGE = 4,
     TEMPERATURE = 5,
-    FREQUENCY = 6
+    FREQUENCY = 6,
+    KPOWER = 7,
 }
 
 export enum OutputPriority {

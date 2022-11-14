@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { BatteryState } from "../../types";
+import { BatteryState } from "../../types/store.types";
 
 const initialState: BatteryState = {
     voltage: 0,
