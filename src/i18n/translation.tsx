@@ -17,5 +17,6 @@ export const translations: Record<keyof typeof Messages, Record<any, string>> = 
     TEXT_BATTERY_CHARGE: { eng: "Battery Charge" },
     TEXT_OUTPUT_CURRENT: {eng: "Output Current"},
     TEXT_OUTPUT_POWER: {eng: "Output Power"},
-    TEXT_FREQUENCY: {eng: "Frequency"}
+    TEXT_FREQUENCY: {eng: "Frequency"},
+    TEXT_CHARGE_POWER: {eng: "Charge Power"}
 }
