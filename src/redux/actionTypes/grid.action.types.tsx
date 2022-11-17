@@ -1,0 +1,1 @@
+export const GRID_DATA_RECEIVED = "GRID_DATA_RECEIVED"

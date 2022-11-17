@@ -1,5 +1,6 @@
 import { AnyAction } from "redux";
 import { SolarState } from "../../types/store.types";
+import { SolarActions } from "../actionTypes";
 
 const initialState: SolarState = {
     voltage: 0,
@@ -11,6 +12,21 @@ const initialState: SolarState = {
 }
 
 const solarReducer = (state: SolarState = initialState, action: AnyAction) => {
-return state;
+    switch (action.type) {
+        case SolarActions.SOLAR_DATA_RECEIVED: {
+            const { voltage,
+                current,
+                power,
+                batteryChargeCurrent } = action.payload;
+            return {
+                ...state,
+                voltage,
+                current,
+                power,
+                batteryChargeCurrent
+            }
+        }
+        default: return state
+    }
 }
 export default solarReducer
