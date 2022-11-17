@@ -53,6 +53,21 @@ export interface SolarState {
   current: number;
   power: number;
   batteryChargeCurrent: number;
-  panelCount: number;
-  panelPeakPower: number;
+  panelCount?: number;
+  panelPeakPower?: number;
+}
+
+
+export interface DataRecord {
+  "battery": BatteryState,
+  "pv": SolarState,
+  "inverter": InverterState,
+  "grid": GridState   
+}
+
+export interface EventData {
+  event: "message" | "open" | "error" | "close",
+  id: string,
+  retry: number,
+  data: DataRecord
 }

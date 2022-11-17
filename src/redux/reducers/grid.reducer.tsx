@@ -1,5 +1,6 @@
 import { AnyAction } from "redux";
-import { GridState } from "../../types";
+import { GridState } from "../../types/store.types";
+import { GridActions } from "../actionTypes";
 
 const initialState: GridState = {
     voltage: 0,
@@ -9,6 +10,13 @@ const initialState: GridState = {
 }
 
 const gridReducer = (state: GridState = initialState, action: AnyAction) => {
-    return state;
+    switch (action.type) {
+        case GridActions.GRID_DATA_RECEIVED: {
+            const { voltage, inputCurrent, batteryChargeCurrent, frequency } = action.payload;
+            return { voltage, inputCurrent, batteryChargeCurrent, frequency }
+        }
+
+        default: return state;
+    }
 }
 export default gridReducer

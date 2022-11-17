@@ -5,9 +5,9 @@ import { ConfigActions } from "../actionTypes";
 
 const initialState: InverterSettings = {
     chargerPriority: ChargerPriority.CSO,
-    outputPriority: OutputPriority.SBU,
-    maxBatteryChargeCurrent: 40,
-    maxGridChargeCurrent: 10
+    outputPriority: OutputPriority.UTI,
+    maxBatteryChargeCurrent: 0,
+    maxGridChargeCurrent: 0
 }
 
 const configReducer = (state: InverterSettings = initialState, action: AnyAction) => {
@@ -20,6 +20,19 @@ const configReducer = (state: InverterSettings = initialState, action: AnyAction
             return { ...state, maxBatteryChargeCurrent: action.payload.maxBatteryChargeCurrent }
         case ConfigActions.MAX_GRID_CHARGE_CURRENT_CHANGED:
             return { ...state, maxGridChargeCurrent: action.payload.maxGridChargeCurrent }
+        case ConfigActions.ALL_CONFIGS_FETCHED:
+            {
+                const { chargerPriority,
+                    outputPriority,
+                    maxBatteryChargeCurrent,
+                    maxGridChargeCurrent } = action.payload
+                return {
+                    chargerPriority,
+                    outputPriority,
+                    maxBatteryChargeCurrent,
+                    maxGridChargeCurrent
+                }
+            }
         default:
             return state;
     }
