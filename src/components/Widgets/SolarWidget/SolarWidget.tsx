@@ -119,7 +119,7 @@ const renderBottomBar = (homeUsagePower: number, batteryChargePower: number) => 
 const mapStateToProps = (state: IAppState) => {
   const { inverter, grid, battery, solar } = state
   return {
-    solarHomeUsage: inverter.power - (grid.voltage * grid.inputCurrent - grid.batteryChargeCurrent * battery.voltage),
+    solarHomeUsage: solar.power - solar.batteryChargeCurrent * battery.voltage,
     solarChargePower: battery.voltage * solar.batteryChargeCurrent,
     solarVoltage: solar.voltage,
     solarCurrent: solar.current,

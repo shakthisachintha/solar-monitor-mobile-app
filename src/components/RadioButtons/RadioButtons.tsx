@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppText from '../AppText/AppText';
+import { StyleParams, ThemeColors } from '../../styles/global.style';
 
 interface IRadioButtonProps {
     onChange: (x: any) => void;
@@ -16,14 +17,19 @@ type RadioButton = {
 
 export const RadioButtons: React.FC<IRadioButtonProps> = ({ onChange, radioButtons, selectedItemValue }) => {
     const [buttonArray, setButtonArray] = useState<RadioButton[]>(radioButtons);
-    // if (selectedItemValue) {
-    //     const modified = buttonArray.map(x => {
-    //         if (x.value === selectedItemValue)
-    //             x.selected = true;
-    //         return x;
-    //     });
-    //     setButtonArray(modified);
-    // }
+
+    useEffect(() => {
+        const modified = buttonArray.map(x => {
+            if (x.selected)
+                x.selected = false;
+            if (x.value === selectedItemValue)
+                x.selected = true;
+            return x;
+        });
+        setButtonArray(modified);
+    }, [selectedItemValue])
+
+
     const changeSelectedClass = (value: any) => {
         const modified = buttonArray.map(x => {
             if (x.selected)
@@ -35,6 +41,7 @@ export const RadioButtons: React.FC<IRadioButtonProps> = ({ onChange, radioButto
         onChange(value);
         setButtonArray(modified);
     };
+
     const buttons = buttonArray.map(({ value, title, selected }) => {
         return (<Pressable
             key={value}
@@ -55,27 +62,34 @@ export const RadioButtons: React.FC<IRadioButtonProps> = ({ onChange, radioButto
 
 export const styles = StyleSheet.create({
     container: {
-        marginTop: 20, marginBottom: 10, flexDirection: 'row', justifyContent: "space-between", paddingRight: 10
+        marginTop: StyleParams.spacer.Large,
+        marginBottom: StyleParams.spacer.Small,
+        paddingRight: StyleParams.spacer.Small,
+        flexDirection: 'row',
+        // marginEnd: StyleParams.spacer.Small
+        // justifyContent: "space-between", 
     },
     radioButtonSelected: {
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 5,
-        backgroundColor: 'pink',
+        borderColor: ThemeColors.ORANGE,
+        backgroundColor: ThemeColors.ORANGE,
+        borderRadius: StyleParams.borderRadius.Medium,
+        padding: StyleParams.spacer.Small,
+        marginEnd: StyleParams.spacer.Small,
         width: 70,
-        padding: 10,
         height: 50,
         elevation: 6
     },
     radioButton: {
         alignItems: 'center',
         justifyContent: 'center',
-        // backgroundColor: 'pink',
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: 'black',
+        borderColor: ThemeColors.DARK,
+        borderRadius: StyleParams.borderRadius.Medium,
+        borderWidth: StyleParams.borderWidth.Small,
+        padding: StyleParams.spacer.Small,
+        marginEnd: StyleParams.spacer.Small,
         width: 70,
-        padding: 10,
         height: 50,
     }
 })

@@ -6,16 +6,30 @@ import TextGrid from '../../TextGrid/TextGrid';
 import ButtonBar from './ButtonBar';
 import { styles as widgetStyles } from '../BatteryWidget/BatteryWidget'
 import { StyleParams, ThemeColors } from '../../../styles/global.style';
-const InverterWidget = () => {
+import { IAppState } from '../../../types/store.types';
+import { connect } from 'react-redux';
+import { Units } from '../../../types';
 
+interface IInverterWidgetProps{
+  voltage?: number;
+  current?: number;
+  frequency?: number;
+  power?: number;
+}
+
+const InverterWidget: React.FC<IInverterWidgetProps> = ({voltage=0, current=0, frequency=0, power=0}) => {
+
+  const inverterPower = (power / (3300)) * 100
   const Capacity = (fillValue: number): JSX.Element => {
-    const cap = (2400 * fillValue / 100) / 1000
+    let cap =  (3300 * fillValue / 100) / 1000
     return (
       <View>
-        <AppText>{cap.toString()} Kw</AppText>
+        {power < 1000 && <AppText unit={Units.POWER}>{Math.round(cap*1000).toString()}</AppText>}
+        {power >= 1000 && <AppText unit={Units.KPOWER}>{Math.round(cap).toString()}</AppText>}
       </View>
     )
   }
+
 
   return (
     <>
@@ -26,9 +40,9 @@ const InverterWidget = () => {
             <View style={widgetStyles.titleUnderline} />
             <TextGrid>
               {[
-                { key: 'TEXT_VOLTAGE', value: "224.5V" },
-                { key: 'TEXT_CURRENT', value: "10.5A" },
-                { key: 'TEXT_FREQUENCY', value: "50Hz" }
+                { key: 'TEXT_VOLTAGE', value: voltage, unit: Units.VOLTAGE },
+                { key: 'TEXT_CURRENT', value: current, unit: Units.CURRENT },
+                { key: 'TEXT_FREQUENCY', value: frequency, unit: Units.FREQUENCY }
               ]}
             </TextGrid>
           </View>
@@ -39,14 +53,13 @@ const InverterWidget = () => {
               lineCap={'butt'}
               children={Capacity}
               width={8}
-              fill={24}
+              fill={inverterPower}
               dashedTint={{
                 width: .2 * StyleParams.spacer.Small,
                 gap: .5 * StyleParams.spacer.Small
               }}
               rotation={270}
               tintColor={ThemeColors.GREEN}
-              onAnimationComplete={() => console.log('onAnimationComplete')}
               backgroundColor={ThemeColors.GRAY} />
           </View>
         </View>
@@ -56,7 +69,13 @@ const InverterWidget = () => {
   )
 }
 
-export default InverterWidget
+const mapStateToProps = (state: IAppState) => {
+  return {
+    ...state.inverter
+  }
+}
+
+export default connect(mapStateToProps, null)(InverterWidget)
 
 const styles = StyleSheet.create({
   widgetContainer: {

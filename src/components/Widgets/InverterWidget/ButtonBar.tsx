@@ -8,15 +8,20 @@ import { ChargerPriority, OutputPriority, Units } from '../../../types'
 import { FontFamilies, StyleParams, ThemeColors } from '../../../styles/global.style'
 import AppButton from '../../AppButton/AppButton'
 import { RadioButtons } from '../../RadioButtons/RadioButtons'
+import { changeChargerPriority, changeMaxChargeCurrent, changeMaxGridChargeCurrent, changeOutputPriority } from '../../../redux/actions/config.actions'
 
 interface IButtonBarProps {
     chargerPriority?: ChargerPriority;
     outputPriority?: OutputPriority;
     maxBatteryChargeCurrent?: number;
     maxGridChargeCurrent?: number;
+    onOutputUpdate?: Function;
+    onChargingUpdate?: Function;
+    onMaxChargeCurrentUpdate?: Function;
+    onMaxGridChargeCurrentUpdate?: Function;
 }
 
-const ButtonBar: React.FC<IButtonBarProps> = ({ chargerPriority = ChargerPriority.CSO, outputPriority = OutputPriority.SBU, maxBatteryChargeCurrent = 0, maxGridChargeCurrent = 0 }) => {
+const ButtonBar: React.FC<IButtonBarProps> = ({ onChargingUpdate, onMaxChargeCurrentUpdate, onMaxGridChargeCurrentUpdate, chargerPriority = ChargerPriority.CSO, outputPriority = OutputPriority.SBU, maxBatteryChargeCurrent = 0, maxGridChargeCurrent = 0, onOutputUpdate = null }) => {
     const [modalVisible, setModalVisible] = useState(false)
     const [modalContent, setModalContent] = useState<JSX.Element>()
 
@@ -88,7 +93,7 @@ const ButtonBar: React.FC<IButtonBarProps> = ({ chargerPriority = ChargerPriorit
                 </View>
                 <View>
                     <RadioButtons selectedItemValue={maxBatteryChargeCurrent} onChange={(x) => { maxBatteryChargeCurrentFormValue = x }} radioButtons={[
-                        { title: "30A", value: 30, },
+                        { title: "30A", value: 30 },
                         { title: "35A", value: 35 },
                         { title: "40A", value: 40 },
                         { title: "45A", value: 45 },
@@ -121,23 +126,19 @@ const ButtonBar: React.FC<IButtonBarProps> = ({ chargerPriority = ChargerPriorit
     }
 
     const handleOutputPrioiritySubmit = (value: OutputPriority) => {
-        // @Todo Map Dispatch to props to actions
-        console.log("Output Prioirty", OutputPriority[value]);
+        onOutputUpdate?.(value);
     }
 
     const handleChargerPrioritySubmit = (value: ChargerPriority) => {
-        // @Todo Map Dispatch to props to actions
-        console.log("Charger Prioirty", ChargerPriority[value]);
+        onChargingUpdate?.(value)
     }
 
     const handleUtilityChargeCurrentSubmit = (value: number) => {
-        // @Todo Map Dispatch to props to actions
-        console.log("Utility Charge Current", value);
+        onMaxGridChargeCurrentUpdate?.(value)
     }
 
     const handleMaximumChargeCurrentSubmit = (value: number) => {
-        // @Todo Map Dispatch to props to actions
-        console.log("Max Charge Current", value);
+        onMaxChargeCurrentUpdate?.(value)
     }
 
     const modalContentArray = [
@@ -173,7 +174,16 @@ const mapStateToProps = (state: IAppState) => {
     }
 }
 
-export default connect(mapStateToProps, null)(ButtonBar)
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        onOutputUpdate: (x: OutputPriority) => dispatch(changeOutputPriority(x)),
+        onChargingUpdate: (x: ChargerPriority) => dispatch(changeChargerPriority(x)),
+        onMaxChargeCurrentUpdate: (x: number) => dispatch(changeMaxChargeCurrent(x)),
+        onMaxGridChargeCurrentUpdate: (x: number) => dispatch(changeMaxGridChargeCurrent(x)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ButtonBar)
 
 export const styles = StyleSheet.create({
     container: {

@@ -1,50 +1,75 @@
 import React, { useEffect } from 'react';
 import {
-  SafeAreaView, StyleSheet, ScrollView
+  SafeAreaView, StyleSheet, ScrollView, RefreshControl
 } from 'react-native';
 import { Provider } from 'react-redux';
-import EventSource from "react-native-sse";
+import EventSource, { EventSourceListener } from "react-native-sse";
 import AppHeader from './components/AppHeader/AppHeader';
 import { BatteryWidget, InverterWidget, SolarWidget, UtilityWidget } from './components/Widgets';
 import { LocaleContext } from './i18n/LocaleContext';
 import LocaleService from './i18n/LocaleService';
 import { store } from './redux/';
 import { ThemeColors } from './styles/global.style';
+import { DataRecord } from './types/store.types';
+import { fetchBatteryData } from './redux/actions/battery.actions';
+import { fetchInverterData } from './redux/actions/inverter.actions';
+import { fetchSolarData } from './redux/actions/solar.actions';
+import { fethGridData } from './redux/actions/grid.actions';
+import { getInverterConfigs } from './redux/actions/config.actions';
 
 const language = 'eng';
 const messageService = LocaleService(language);
 
 const App = () => {
-  // useEffect(() => {
-  //   const es = new EventSource("https://3c71-175-157-164-182.in.ngrok.io/stream");
 
-  //   es.addEventListener("open", (event) => {
-  //     console.log("Open SSE connection.");
-  //   });
+  const [refreshing, setRefreshing] = React.useState(false);
 
-  //   es.addEventListener("message", (event) => {
-  //     console.log("New message event:", event.data);
-  //   });
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
 
-  //   es.addEventListener("error", (event) => {
-  //     if (event.type === "error") {
-  //       console.error("Connection error:", event.message);
-  //     } else if (event.type === "exception") {
-  //       console.error("Error:", event.message, event.error);
-  //     }
-  //   });
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
-  //   es.addEventListener("close", (event) => {
-  //     console.log("Close SSE connection.");
-  //   });
-  // }, []);
+  useEffect(() => {
+    const es = new EventSource("https://55c6-112-134-159-153.in.ngrok.io/stream");
+
+    const listener: EventSourceListener = (event) => {
+      if (event.type === 'message') {
+        const data = JSON.parse(event.data || "") as DataRecord
+        store.dispatch(fetchBatteryData(data.battery))
+        store.dispatch(fetchInverterData(data.inverter))
+        store.dispatch(fetchSolarData(data.pv))
+        store.dispatch(fethGridData(data.grid))
+      }
+
+      if (event.type === 'open') { console.log("SSE connection opened.") }
+      if (event.type === 'error') { console.log("SSE connection error.", event.message) }
+      if (event.type === 'exception') { console.log("SSE exeception.", event.message, event.error) }
+      if (event.type === 'close') { console.log("SSE connection closed.") }
+    }
+
+    es.addEventListener("open", listener);
+    es.addEventListener("message", listener);
+    es.addEventListener("error", listener);
+    es.addEventListener("close", listener);
+
+    store.dispatch(getInverterConfigs())
+
+    return () => {
+      es.removeAllEventListeners();
+      es.close();
+    }
+  }, [])
 
   return (
     <Provider store={store}>
       <LocaleContext.Provider value={messageService}>
         <SafeAreaView style={styles.container}>
           <AppHeader />
-          <ScrollView>
+          <ScrollView refreshControl={<RefreshControl colors={[ThemeColors.GREEN, ThemeColors.ORANGE, ThemeColors.GRAY]} refreshing={refreshing} onRefresh={onRefresh} />}>
             <BatteryWidget />
             <SolarWidget />
             <InverterWidget />
